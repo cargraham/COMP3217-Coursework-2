@@ -71,24 +71,31 @@ def gaussian_naive_bayes(training_data, target_labels, testing_data):
         testing_results.append(prediction)
     return testing_results
 
-#create an array of headers for the data so the label can be easily separated
-columns=['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', 'label']
 
-#reads in 80% of the 'TrainingData.txt' file to train the model
-training_data_80 = pd.read_csv('TrainingData80.txt', sep = ',', header = None, names = columns)
-target_labels_80 = np.asarray(training_data_80.label)
-training_data_80 = training_data_80.drop(['label'], axis = 1)
+#reads in the whole training data set from 'TrainingData.txt' to train the model and shuffles the order
+training_data = pd.read_csv('TrainingData.txt', sep = ',', header = None)
+training_data = training_data.sample(frac = 1, random_state = 49).reset_index(drop=True)
+target_labels = training_data.iloc[:, -1]
+
+#splits 80% of the training data to train the model
+training_data_80 = training_data.head(8000)
+target_labels_80 = training_data_80.iloc[:, -1]
+training_data_80 = training_data_80.iloc[:, :24]
+
+#splits 20% of the training data to validate the model
+validation_data = training_data.tail(2000)
+validation_target_labels = validation_data.iloc[:, -1]
+
+#converts the DataFrames to NumPy arrays
+training_data = np.asarray(training_data.iloc[:, :24])
 training_data_80 = np.asarray(training_data_80)
-
-#reads in 20% of the 'TrainingData.txt' file to validate the model
-validation_data = pd.read_csv('ValidationData20.txt', sep = ',', header = None, names = columns)
-validation_target_labels = validation_data.label
-validation_data = validation_data.drop(['label'], axis = 1)
+target_labels = np.asarray(target_labels)
 validation_data = np.asarray(validation_data)
-validation_count = len(validation_data[:, 0])
+validation_target_labels = np.asarray(validation_target_labels)
 
 #counts how many predictions were correct to produce an accuracy score
 correct_count = 0
+validation_count = len(validation_data[:, 0])
 validation_results = gaussian_naive_bayes(training_data_80, target_labels_80, validation_data)
 for guideline in range(validation_count):
     if validation_results[guideline] == validation_target_labels[guideline]:
@@ -103,28 +110,20 @@ testing_data = pd.read_csv('TestingData.txt', sep = ',', header = None)
 testing_data = np.asarray(testing_data)
 testing_count = len(testing_data[:, 0])
 
-#reads in the whole training data set from 'TrainingData.txt' to train the model for testing
-training_data = pd.read_csv('TrainingData.txt', sep = ',', header = None, names = columns)
-target_labels = np.asarray(training_data.label)
-training_data = training_data.drop(['label'], axis = 1)
-training_data = np.asarray(training_data)
-
 #predict the labels for the testing data and write to file
 testing_results = gaussian_naive_bayes(training_data, target_labels, testing_data)
 
 #create a file to write the results of testing
-testing_results_file = open('TestingResults.txt', 'a')
-testing_results_file.seek(0)
-testing_results_file.truncate()
+testing_results_file = open('TestingResults.txt', 'w')
+
+testing_data_with_predictions = np.ones((testing_count, 25))
 
 #for each guideline in the testing data, write the guideline and the predicted label in result file
 for guideline in range(testing_count):
     prediction = testing_results[guideline]
-    testing_string = re.sub('( \[|\[|\])', '', str(testing_data[guideline]))
-    testing_string = re.sub(' +', ' ', testing_string).strip()
-    testing_string = re.sub(' ', ',', testing_string)
-    testing_string = re.sub('\n', '', testing_string) + ',' + str(prediction) + '\n'
-    testing_results_file.write(testing_string)
+    testing_data_with_predictions[guideline] = np.append(testing_data[guideline], prediction)
 
-testing_results_file.close()
+formatter = (['%.15g'] * 24)
+formatter = formatter + ['%i']
+np.savetxt(testing_results_file, testing_data_with_predictions, delimiter=',', fmt=formatter)
 print("DONE")

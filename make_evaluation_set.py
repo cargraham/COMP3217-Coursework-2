@@ -2,9 +2,11 @@ trainingData = open('TrainingData.txt', 'r')
 training80Data = open('TrainingData80.txt', 'a')
 training80Data.seek(0)
 training80Data.truncate()
+
 validation20Data = open('ValidationData20.txt', 'a')
 validation20Data.seek(0)
 validation20Data.truncate()
+
 testing20Data = open('TestingData20.txt', 'a')
 testing20Data.seek(0)
 testing20Data.truncate()
