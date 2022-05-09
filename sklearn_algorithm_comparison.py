@@ -4,6 +4,7 @@ from sklearn.metrics import classification_report
 from sklearn.neural_network import MLPClassifier
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.neighbors import KNeighborsClassifier
+from sklearn.naive_bayes import GaussianNB
 from sklearn.svm import SVC
 
 #reads in the whole training data set from 'TrainingData.txt' to train the model and shuffles the order
@@ -31,7 +32,29 @@ validation_target_labels = np.asarray(validation_target_labels)
 MLP_clf = MLPClassifier()
 MLP_clf.fit(training_data_80, target_labels_80)
 MLP_results = MLP_clf.predict(validation_data)
-print(MLP_results)
-print(validation_target_labels)
 print("Multilayer Perceptron Classifier")
 print(classification_report(MLP_results, validation_target_labels))
+
+RF_clf = RandomForestClassifier()
+RF_clf.fit(training_data_80, target_labels_80)
+RF_results = RF_clf.predict(validation_data)
+print("Random Forest Classifier")
+print(classification_report(RF_results, validation_target_labels))
+
+KNN_clf = KNeighborsClassifier()
+KNN_clf.fit(training_data_80, target_labels_80)
+KNN_results = KNN_clf.predict(validation_data)
+print("K Nearest Neighbours Classifier")
+print(classification_report(KNN_results, validation_target_labels))
+
+GNB_clf = GaussianNB()
+GNB_clf.fit(training_data_80, target_labels_80)
+GNB_results = GNB_clf.predict(validation_data)
+print("Gaussian Naive Bayes Classifier")
+print(classification_report(GNB_results, validation_target_labels))
+
+SVC_clf = SVC()
+SVC_clf.fit(training_data_80, target_labels_80)
+SVC_results = SVC_clf.predict(validation_data)
+print("Support Vector Classifier")
+print(classification_report(SVC_results, validation_target_labels))

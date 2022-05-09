@@ -86,7 +86,7 @@ training_data_80 = training_data_80.iloc[:, :24]
 validation_data = training_data.tail(2000)
 validation_target_labels = validation_data.iloc[:, -1]
 
-#converts the DataFrames to NumPy arrays
+#converts the Pandas DataFrames to NumPy arrays
 training_data = np.asarray(training_data.iloc[:, :24])
 training_data_80 = np.asarray(training_data_80)
 target_labels = np.asarray(target_labels)
@@ -113,9 +113,7 @@ testing_count = len(testing_data[:, 0])
 #predict the labels for the testing data and write to file
 testing_results = gaussian_naive_bayes(training_data, target_labels, testing_data)
 
-#create a file to write the results of testing
-testing_results_file = open('TestingResults.txt', 'w')
-
+#create a new array to store the guidelines with their predictions
 testing_data_with_predictions = np.ones((testing_count, 25))
 
 #for each guideline in the testing data, write the guideline and the predicted label in result file
@@ -123,7 +121,8 @@ for guideline in range(testing_count):
     prediction = testing_results[guideline]
     testing_data_with_predictions[guideline] = np.append(testing_data[guideline], prediction)
 
+#write results to results file
 formatter = (['%.15g'] * 24)
 formatter = formatter + ['%i']
-np.savetxt(testing_results_file, testing_data_with_predictions, delimiter=',', fmt=formatter)
+np.savetxt('TestingResults.txt', testing_data_with_predictions, delimiter=',', fmt=formatter)
 print("DONE")
