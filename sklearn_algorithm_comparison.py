@@ -29,30 +29,35 @@ target_labels = np.asarray(target_labels)
 validation_data = np.asarray(validation_data)
 validation_target_labels = np.asarray(validation_target_labels)
 
+#creates and trains a multilayer perceptron classifier and prints the accuracy
 MLP_clf = MLPClassifier()
 MLP_clf.fit(training_data_80, target_labels_80)
 MLP_results = MLP_clf.predict(validation_data)
 print("Multilayer Perceptron Classifier")
 print(classification_report(MLP_results, validation_target_labels))
 
+##creates and trains a random forest classifier and prints the accuracy
 RF_clf = RandomForestClassifier()
 RF_clf.fit(training_data_80, target_labels_80)
 RF_results = RF_clf.predict(validation_data)
 print("Random Forest Classifier")
 print(classification_report(RF_results, validation_target_labels))
 
+#creates and trains a k nearest neighbours classifier and prints the accuracy
 KNN_clf = KNeighborsClassifier()
 KNN_clf.fit(training_data_80, target_labels_80)
 KNN_results = KNN_clf.predict(validation_data)
 print("K Nearest Neighbours Classifier")
 print(classification_report(KNN_results, validation_target_labels))
 
+#creates and trains a gaussian naive bayes classifier and prints the accuracy
 GNB_clf = GaussianNB()
 GNB_clf.fit(training_data_80, target_labels_80)
 GNB_results = GNB_clf.predict(validation_data)
 print("Gaussian Naive Bayes Classifier")
 print(classification_report(GNB_results, validation_target_labels))
 
+#creates and trains a support vector classifier and prints the accuracy
 SVC_clf = SVC()
 SVC_clf.fit(training_data_80, target_labels_80)
 SVC_results = SVC_clf.predict(validation_data)

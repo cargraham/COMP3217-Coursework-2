@@ -13,7 +13,7 @@ def prior_prob(target_labels):
         prior_probab[i] = y_dict[i]/target_labels.shape[0]
     return prior_probab
 
-#returns mean and variance of all guideline in training data
+#returns mean and variance of all guidelines in training data
 def mean_var(training_data, target_labels):
     features_count = training_data.shape[1]
     mean = np.ones((2, features_count))
@@ -93,16 +93,14 @@ target_labels = np.asarray(target_labels)
 validation_data = np.asarray(validation_data)
 validation_target_labels = np.asarray(validation_target_labels)
 
-#counts how many predictions were correct to produce an accuracy score
-correct_count = 0
-validation_count = len(validation_data[:, 0])
-validation_results = gaussian_naive_bayes(training_data_80, target_labels_80, validation_data)
-for guideline in range(validation_count):
-    if validation_results[guideline] == validation_target_labels[guideline]:
-        correct_count += 1
+#works out and prints the training accuracy of the model
+training_results = gaussian_naive_bayes(training_data, target_labels, training_data)
+print("Training Accuracy:")
+print(classification_report(training_results, target_labels))
 
-#prints the accuracy of the model
-print("Percentage of correct classifications: " + str(correct_count*100/validation_count))
+#prints the testing accuracy of the model using validation data 
+validation_results = gaussian_naive_bayes(training_data_80, target_labels_80, validation_data)
+print("Testing Accuracy:")
 print(classification_report(validation_results, validation_target_labels))
 
 #reads in the test data from 'TestingData.txt'

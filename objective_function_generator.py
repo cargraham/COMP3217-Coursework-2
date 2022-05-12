@@ -8,18 +8,27 @@ user_tasks = np.asarray(user_tasks)
 #read in abnormal pricing guidelines
 pricing_guidelines = pd.read_excel("TestingResults.xlsx", sheet_name="AbnormalGuidelines", header=0)
 pricing_guidelines = np.asarray(pricing_guidelines)
+
+#creates a NumPy array of the guideline row numbers
 pricing_guidelines_nums = pricing_guidelines[:, 0]
+
+#the guidelines without row numbers 
 pricing_guidelines = pricing_guidelines[:, 1:-1]
 
+#for each user from 1-5
 for user_num in range(1,6):
+
+    #initialise a counter to retrieve guidelines from NumPy array
     guideline_counter = 0
     
     for guideline_num in pricing_guidelines_nums:
         guideline_num = int(guideline_num)
-        file = "lp/guideline-" + str(guideline_num) + "-user-"+ str(user_num) + ".lp"
-        file = open(file, 'a')
 
-        #initialise arrays for neat printing
+        #creates a file for the current guideline and user
+        file = "lp/guideline-" + str(guideline_num) + "-user-"+ str(user_num) + ".lp"
+        file = open(file, 'w')
+
+        #initialise arrays to use for neat printing
         output_array = []
         total_task_array = []
         indiv_task_array = []
@@ -49,7 +58,7 @@ for user_num in range(1,6):
         #format the objective function
         output_string = "c=" + "+".join(output_array) + ";"
 
-        #prints the input for linear programming
+        #wirtes the input for linear programming to the file
         file.write("/* Objective function */\n")
         file.write("min: c;\n\n")
         file.write(output_string + "\n")
@@ -60,4 +69,5 @@ for user_num in range(1,6):
         file.write("\n")
         file.write("/* Variable bounds */")
         file.close()
+        
         guideline_counter += 1
