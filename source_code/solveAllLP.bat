@@ -1,14 +1,19 @@
 @echo off
 setlocal enableDelayedExpansion 
 
+REM move necessary files into the subdirectory 'lp'
 move lp_solve.exe lp
 move AxesTitles.bas lp
 move GraphMakerMacro.bas lp
 move csv2xlsm.vbs lp
 
+REM change directory into subdirectory 'lp'
 cd lp
 
+REM make directory 'lpcsv' if it doesn't already exist
 if not exist lpcsv mkdir lpcsv
+
+REM move necessary files into the subdirectory 'lpcsv'
 move AxesTitles.bas lpcsv
 move GraphMakerMacro.bas lpcsv
 move csv2xlsm.vbs lpcsv
@@ -18,6 +23,7 @@ for %%i in (*.lp) do (
 	lp_solve %%i > lpcsv\%%~ni.csv
 )
 
+REM change directory into subdirectory 'lpcsv'
 cd lpcsv
 
 REM sort all csv files into subdirectories according to their guidelines
@@ -43,4 +49,5 @@ for %%i in (*.csv) do (
 	del %%i
 )
 
+REM change directory up to root directory twice
 cd ..\..
